@@ -1,0 +1,162 @@
+@import 'compass'
+
+//
+// Variables
+// ––––––––––––––––––––––––––––––––––––––––––––––
+$stageWidth         : 605px
+$stageHeight        : 680px
+$brickBorderWidth   : 4px
+$brickMargin        : 1px
+$brickHeight        : 15px
+$brickWidth         : floor(($stageWidth / 13) - ($brickMargin * 2))
+$ballSize           : 16px
+$paddleWidth        : 100px
+$scoreHeight        : 30px
+$scoreWidth         : 400px
+
+$teal               : #1abc9c
+$green              : #2ecc71
+$blue               : #3498db
+$amethyst           : #9b59b6
+$yellow             : #f1c40f
+$orange             : #e74c3c
+$grey               : #95a5a6
+$steel              : #34495e
+$midnight           : #2c3e50
+$white              : #ecf0f1
+$pumpkin            : #d35400
+
+
+
+//
+// Mixins
+// ––––––––––––––––––––––––––––––––––––––––––––––
+@mixin brick-color($color)
+    background: $color
+    border-bottom: $brickBorderWidth solid darken($color, 10%)
+
+%font-style
+    font-family: 'helvetica'
+    color: $white
+    font-size: 23px
+    font-weight: lighter
+
+
+
+//
+// Positions and styles
+// ––––––––––––––––––––––––––––––––––––––––––––––
+html, body
+    width: 100%
+    height: 100%
+    background: $steel
+    overflow: hidden
+
+#stage
+    width: $stageWidth
+    height: $stageHeight
+    background: $midnight
+    position: absolute
+    top: 50%
+    left: 50%
+    margin-top: -$stageHeight / 2
+    margin-left: -$stageWidth / 2
+
+#score
+    width: $scoreWidth
+    height: $scoreHeight
+    position: absolute
+    bottom: 10px
+    left: 20px
+    @extend %font-style
+
+    &:before
+        content: "Score: "
+        color: lighten($midnight, 10%)
+        font-size: 16px
+        position: absolute
+        top: -25px
+
+#ball
+    width: $ballSize
+    height: $ballSize
+    background: $white
+    bottom: 200px
+    left: 50%
+    margin-left: -$ballSize / 2
+    @include border-radius(50%)
+
+#paddle
+    width: $paddleWidth
+    height: 16px
+    background: $pumpkin
+    bottom: 100px
+    left: 50%
+    margin-left: -$paddleWidth / 2
+    @include border-radius(20px)
+
+#ball, #paddle, .brick
+    position: absolute
+
+#bricks
+    width: $stageWidth
+    height: 300px
+    padding: 3px 0 0 3px
+
+    .row
+        height: $brickHeight + $brickBorderWidth
+        position: relative
+        margin-bottom: 2px
+
+.brick
+    width: $brickWidth
+    height: $brickHeight
+    margin: $brickMargin
+    @include transition(all, 0.173s)
+
+.brick-type-1
+    @include brick-color($teal)
+
+.brick-type-2
+    @include brick-color($green)
+
+.brick-type-3
+    @include brick-color($blue)
+
+.brick-type-4
+    @include brick-color($amethyst)
+
+.brick-type-5
+    @include brick-color($yellow)
+
+.brick-type-6
+    @include brick-color($orange)
+
+.brick-type-7
+    @include brick-color($grey)
+
+.brick-type-8
+    @include brick-color($white)
+
+.explode
+    width: $brickWidth / 4
+    height: $brickHeight / 4
+    margin-left: $brickWidth / 2
+    margin-top: $brickHeight / 2
+    pointer-events: none
+    @include opacity(0)
+
+.confetti
+    width: 100px
+    height: 100px
+    position: absolute
+    z-index: 9999
+    pointer-events: none
+
+    div
+        width: 13px
+        height: 13px
+        position: absolute
+        left: 50%
+        top: 50%
+        margin: -1px 0 0 -1px
