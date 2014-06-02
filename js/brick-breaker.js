@@ -16,6 +16,16 @@ var leftKey         = 37, // Keycode
 
 
 //
+// Utility functions
+// ––––––––––––––––––––––––––––––––––––––––––––––
+Math.toDegrees = function(rad) {
+    return rad * 180 / Math.PI;
+};
+
+
+
+
+//
 // Stage Object
 // ––––––––––––––––––––––––––––––––––––––––––––––
 function Stage() {
@@ -40,18 +50,29 @@ function Paddle() {
     this.position   = {x: 300, y: 580};
     this.speed      = 10;
 
+    this.paddle.css({
+        left : this.position.x,
+        top  : this.position.y
+    });
+
 }
 
 Paddle.prototype.move = function(direction) {
 
     if (direction === 'left' && this.position.x > stage.boundary.left + this.width / 2 + 10) {
         this.position.x -= this.speed;
-        this.paddle.css('left',  this.position.x);
+        this.paddle.css({
+            left : this.position.x,
+            top  : this.position.y
+        });
     }
 
     else if (direction === 'right' && this.position.x < stage.boundary.right - this.width / 2 - 10) {
         this.position.x += this.speed;
-        this.paddle.css('left',  this.position.x);
+        this.paddle.css({
+            left : this.position.x,
+            top  : this.position.y
+        });
     }
 
 };
@@ -67,7 +88,7 @@ function Ball() {
     this.ball       = $('#ball');
     this.width      = parseInt(this.ball.width(), 10);
     this.velocity   = 1.11;
-    this.dir        = {x: 0,  y: 270}; // initial x, y direction
+    this.dir        = {x: 0,  y: 270};  // initial x, y direction
     this.position   = {x: 300, y: 400}; // initial x, y position
 
 }
@@ -107,6 +128,8 @@ Ball.prototype.move = function() {
 
 Ball.prototype.collisions = function() {
 
+    console.log('Paddle x: ' + paddle.position.x + ' Ball x: ' + ball.position.x);
+
     // Side wall collision
     if (this.position.x <= stage.boundary.left + this.width || this.position.x >= stage.boundary.right - this.width) {
         this.bounce('x');
@@ -119,7 +142,7 @@ Ball.prototype.collisions = function() {
 
     // Paddle
     // Todo: Figure out why I need so many arbitrary values
-    else if (this.position.y >= paddle.position.y - 30 && this.position.x >= paddle.position.x - paddle.width / 2 && this.position.x < paddle.position.x + paddle.width) {
+    else if (this.position.y >= paddle.position.y - this.width && this.position.x >= paddle.position.x && this.position.x < paddle.position.x + paddle.width) {
         this.collide(paddle);
     }
 
@@ -140,16 +163,10 @@ Ball.prototype.collide = function(elem) {
 
     if (elem === paddle) {
 
-        // Hit on the left side of the paddle
-        if (ball.position.x <= paddle.position.x && ball.position.x >= paddle.position.x / 2 - 10) {
-            ball.bounce('y', (paddle.position.x - ball.position.x) * -1);
-        }
+        var diff = ball.position.x - paddle.position.x;
+        var launchAngle = Math.round(Math.toDegrees(diff / 100));
+        ball.bounce('y', launchAngle);
 
-        // Hit on the right side of the paddle
-        else if (ball.position.x >= paddle.position.x / 2 + 10 && ball.position.x <= paddle.position.x + paddle.width) {
-
-            ball.bounce('y', (paddle.position.x - ball.position.x));
-        }
     }
 
 };
@@ -359,17 +376,17 @@ var controls  = new Controls();
 // ––––––––––––––––––––––––––––––––––––––––––––––
 function gameLoop() {
 
-    // Movement keys
-    if (keysDown[leftKey]) {
-        paddle.move('left');
-    }
-
-    if (keysDown[rightKey]) {
-        paddle.move('right');
-    }
-
     // Get the ball moving. Har har.
     if (gamesOn) {
+
+        // Movement keys
+        if (keysDown[leftKey]) {
+            paddle.move('left');
+        }
+        else if (keysDown[rightKey]) {
+            paddle.move('right');
+        }
+
         ball.move();
         ball.collisions();
     }
