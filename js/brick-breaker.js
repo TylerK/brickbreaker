@@ -1,6 +1,6 @@
 'use strict';
 
-// Get JSHint off my nuts
+// Hey, JSHint... shutup about these already.
 var $ = $, console = console;
 
 
@@ -141,7 +141,16 @@ Ball.prototype.collide = function(elem) {
 
     if (elem === paddle) {
 
+        // Hit on the left side of the paddle
+        if (ball.position.x <= paddle.position.x && ball.position.x >= paddle.position.x / 2 - 10) {
+            ball.bounce('y', (paddle.position.x - ball.position.x) * -1);
+        }
 
+        // Hit on the right side of the paddle
+        else if (ball.position.x >= paddle.position.x / 2 + 10 && ball.position.x <= paddle.position.x + paddle.width) {
+
+            ball.bounce('y', (paddle.position.x - ball.position.x));
+        }
     }
 
 };
