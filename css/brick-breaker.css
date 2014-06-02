@@ -1,4 +1,4 @@
-/* line 38, brick-breaker.sass */
+/* line 38, ../sass/brick-breaker.sass */
 #score {
   font-family: "helvetica";
   color: #ecf0f1;
@@ -6,7 +6,7 @@
   font-weight: lighter;
 }
 
-/* line 49, brick-breaker.sass */
+/* line 49, ../sass/brick-breaker.sass */
 html, body {
   width: 100%;
   height: 100%;
@@ -14,7 +14,7 @@ html, body {
   overflow: hidden;
 }
 
-/* line 55, brick-breaker.sass */
+/* line 55, ../sass/brick-breaker.sass */
 #stage {
   width: 605px;
   height: 680px;
@@ -26,7 +26,7 @@ html, body {
   margin-left: -302.5px;
 }
 
-/* line 65, brick-breaker.sass */
+/* line 65, ../sass/brick-breaker.sass */
 #score {
   width: 400px;
   height: 30px;
@@ -34,7 +34,7 @@ html, body {
   bottom: 10px;
   left: 20px;
 }
-/* line 73, brick-breaker.sass */
+/* line 73, ../sass/brick-breaker.sass */
 #score:before {
   content: "Score: ";
   color: #3e5771;
@@ -43,7 +43,7 @@ html, body {
   top: -25px;
 }
 
-/* line 80, brick-breaker.sass */
+/* line 80, ../sass/brick-breaker.sass */
 #ball {
   width: 16px;
   height: 16px;
@@ -58,7 +58,7 @@ html, body {
   border-radius: 50%;
 }
 
-/* line 89, brick-breaker.sass */
+/* line 89, ../sass/brick-breaker.sass */
 #paddle {
   width: 100px;
   height: 16px;
@@ -73,25 +73,25 @@ html, body {
   border-radius: 20px;
 }
 
-/* line 98, brick-breaker.sass */
+/* line 98, ../sass/brick-breaker.sass */
 #ball, #paddle, .brick {
   position: absolute;
 }
 
-/* line 101, brick-breaker.sass */
+/* line 101, ../sass/brick-breaker.sass */
 #bricks {
   width: 605px;
   height: 300px;
   padding: 3px 0 0 3px;
 }
-/* line 106, brick-breaker.sass */
+/* line 106, ../sass/brick-breaker.sass */
 #bricks .row {
   height: 19px;
   position: relative;
   margin-bottom: 2px;
 }
 
-/* line 111, brick-breaker.sass */
+/* line 111, ../sass/brick-breaker.sass */
 .brick {
   width: 44px;
   height: 15px;
@@ -102,55 +102,55 @@ html, body {
   transition: all, 0.173s;
 }
 
-/* line 117, brick-breaker.sass */
+/* line 117, ../sass/brick-breaker.sass */
 .brick-type-1 {
   background: #1abc9c;
   border-bottom: 4px solid #148f77;
 }
 
-/* line 120, brick-breaker.sass */
+/* line 120, ../sass/brick-breaker.sass */
 .brick-type-2 {
   background: #2ecc71;
   border-bottom: 4px solid #25a25a;
 }
 
-/* line 123, brick-breaker.sass */
+/* line 123, ../sass/brick-breaker.sass */
 .brick-type-3 {
   background: #3498db;
   border-bottom: 4px solid #217dbb;
 }
 
-/* line 126, brick-breaker.sass */
+/* line 126, ../sass/brick-breaker.sass */
 .brick-type-4 {
   background: #9b59b6;
   border-bottom: 4px solid #804399;
 }
 
-/* line 129, brick-breaker.sass */
+/* line 129, ../sass/brick-breaker.sass */
 .brick-type-5 {
   background: #f1c40f;
   border-bottom: 4px solid #c29d0b;
 }
 
-/* line 132, brick-breaker.sass */
+/* line 132, ../sass/brick-breaker.sass */
 .brick-type-6 {
   background: #e74c3c;
   border-bottom: 4px solid #d62c1a;
 }
 
-/* line 135, brick-breaker.sass */
+/* line 135, ../sass/brick-breaker.sass */
 .brick-type-7 {
   background: #95a5a6;
   border-bottom: 4px solid #798d8f;
 }
 
-/* line 138, brick-breaker.sass */
+/* line 138, ../sass/brick-breaker.sass */
 .brick-type-8 {
   background: #ecf0f1;
   border-bottom: 4px solid #cfd9db;
 }
 
-/* line 141, brick-breaker.sass */
+/* line 141, ../sass/brick-breaker.sass */
 .explode {
   width: 11px;
   height: 3.75px;
@@ -161,7 +161,7 @@ html, body {
   opacity: 0;
 }
 
-/* line 149, brick-breaker.sass */
+/* line 149, ../sass/brick-breaker.sass */
 .confetti {
   width: 100px;
   height: 100px;
@@ -169,7 +169,7 @@ html, body {
   z-index: 9999;
   pointer-events: none;
 }
-/* line 156, brick-breaker.sass */
+/* line 156, ../sass/brick-breaker.sass */
 .confetti div {
   width: 13px;
   height: 13px;

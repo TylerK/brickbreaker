@@ -9,8 +9,6 @@ var $ = $, console = console;
 // ––––––––––––––––––––––––––––––––––––––––––––––
 var leftKey         = 37, // Keycode
     rightKey        = 39, // Keycode
-    paddleSpeed     = 10,
-    scoreAmount     = 1000,
     gamesOn         = true, // Todo: Tie this to a start button
     keysDown        = {};
 
@@ -25,7 +23,7 @@ function Stage() {
     this.wrapper    = $('#stage');
     this.width      = parseInt(this.wrapper.width(), 10);
     this.height     = parseInt(this.wrapper.height(), 10);
-    this.boundary   = {top: 0, right: this.width, bottom: this.height, left: 0 };
+    this.boundary   = { top: 0, right: this.width, bottom: this.height, left: 0 };
 
 }
 
@@ -40,18 +38,19 @@ function Paddle() {
     this.paddle     = $('#paddle');
     this.width      = parseInt(this.paddle.width(), 10);
     this.position   = {x: 300, y: 580};
+    this.speed      = 10;
 
 }
 
 Paddle.prototype.move = function(direction) {
 
     if (direction === 'left' && this.position.x > stage.boundary.left + this.width / 2 + 10) {
-        this.position.x -= paddleSpeed;
+        this.position.x -= this.speed;
         this.paddle.css('left',  this.position.x);
     }
 
     else if (direction === 'right' && this.position.x < stage.boundary.right - this.width / 2 - 10) {
-        this.position.x += paddleSpeed;
+        this.position.x += this.speed;
         this.paddle.css('left',  this.position.x);
     }
 
