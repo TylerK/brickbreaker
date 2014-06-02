@@ -1,7 +1,12 @@
 'use strict';
 
-// Hey, JSHint... shutup about these already.
-var $ = $, console = console;
+
+
+
+// Getting jshint to be quiet about libs.
+var $ = $, console = console, _ = _;
+
+
 
 
 //
@@ -10,7 +15,8 @@ var $ = $, console = console;
 var leftKey         = 37, // Keycode
     rightKey        = 39, // Keycode
     gamesOn         = true, // Todo: Tie this to a start button
-    keysDown        = {};
+    keysDown        = {},
+    grid            = {};
 
 
 
@@ -47,8 +53,9 @@ function Paddle() {
 
     this.paddle     = $('#paddle');
     this.width      = parseInt(this.paddle.width(), 10);
-    this.position   = {x: 300, y: 580};
-    this.speed      = 10;
+    this.position   = {x: 250, y: 580};
+    this.speed      = 8;
+    this.margin     = 10;
 
     this.paddle.css({
         left : this.position.x,
@@ -59,7 +66,7 @@ function Paddle() {
 
 Paddle.prototype.move = function(direction) {
 
-    if (direction === 'left' && this.position.x > stage.boundary.left + this.width / 2 + 10) {
+    if (direction === 'left' && this.position.x >= stage.boundary.left + 6) {
         this.position.x -= this.speed;
         this.paddle.css({
             left : this.position.x,
@@ -67,7 +74,7 @@ Paddle.prototype.move = function(direction) {
         });
     }
 
-    else if (direction === 'right' && this.position.x < stage.boundary.right - this.width / 2 - 10) {
+    else if (direction === 'right' && this.position.x <= stage.boundary.right - this.width) {
         this.position.x += this.speed;
         this.paddle.css({
             left : this.position.x,
@@ -81,135 +88,47 @@ Paddle.prototype.move = function(direction) {
 
 
 //
-// Ball Object
-// ––––––––––––––––––––––––––––––––––––––––––––––
-function Ball() {
-
-    this.ball       = $('#ball');
-    this.width      = parseInt(this.ball.width(), 10);
-    this.velocity   = 1.11;
-    this.dir        = {x: 0,  y: 270};  // initial x, y direction
-    this.position   = {x: 300, y: 400}; // initial x, y position
-
-}
-
-Ball.prototype.bounce = function(dir, modifier) {
-
-    // Switch, just in case I want to add more directions in the future
-    switch(dir) {
-
-        case 'x':
-            this.dir.x *= -1;
-            break;
-
-        case 'y':
-            this.dir.y *= -1;
-
-            if (modifier) {
-                this.dir.x += modifier;
-            }
-
-            break;
-
-    }
-};
-
-Ball.prototype.move = function() {
-
-    this.position.x += Math.round(this.dir.x * Math.PI / 180 * this.velocity);
-    this.position.y += Math.round(this.dir.y * Math.PI / 180 * this.velocity);
-
-    this.ball.css({
-        left : this.position.x,
-        top  : this.position.y
-    });
-
-};
-
-Ball.prototype.collisions = function() {
-
-    console.log('Paddle x: ' + paddle.position.x + ' Ball x: ' + ball.position.x);
-
-    // Side wall collision
-    if (this.position.x <= stage.boundary.left + this.width || this.position.x >= stage.boundary.right - this.width) {
-        this.bounce('x');
-    }
-
-    // Top wall
-    else if (this.position.y <= stage.boundary.top + this.width / 2) {
-        this.bounce('y');
-    }
-
-    // Paddle
-    // Todo: Figure out why I need so many arbitrary values
-    else if (this.position.y >= paddle.position.y - this.width && this.position.x >= paddle.position.x && this.position.x < paddle.position.x + paddle.width) {
-        this.collide(paddle);
-    }
-
-    // Below paddle = game over!
-    else if (this.position.y >= paddle.position.y + this.width + 10) {
-        console.log('game over');
-        gamesOn = false;
-    }
-
-    // console.log('Paddle x: ' + paddle.position.x + ' Ball x: ' + this.position.x);
-
-};
-
-Ball.prototype.collide = function(elem) {
-
-    // console.log('collided with:');
-    // console.log(elem);
-
-    if (elem === paddle) {
-
-        var diff = ball.position.x - paddle.position.x;
-        var launchAngle = Math.round(Math.toDegrees(diff / 100));
-        ball.bounce('y', launchAngle);
-
-    }
-
-};
-
-
-
-
-//
 // Bricks Object
 // ––––––––––––––––––––––––––––––––––––––––––––––
 function Bricks() {
-    this.wrapper = $('#bricks');
+    this.wrapper    = $('#bricks');
+    this.nodes      = {row: '<div class="row"></div>', brick: '<div class="brick"></div>' };
+    this.brick      = {height: 15, width: 44, margin: 2}; // Not an actual brick object, just the default width\height settings
 }
-
-Bricks.prototype.newRow = function(row) {
-    var node = '<div class="row row-' + row + '"></div>';
-    this.wrapper.append(node);
-};
-
-Bricks.prototype.addBrick = function(type, row) {
-    var node = '<div class="brick brick-type-' + type + '"></div>';
-    $('.row-' + row).append(node);
-};
 
 Bricks.prototype.layoutLevel = function(bricks) {
 
-    // Add rows and bricks to the dom
+    var id = 1;
+
+    // Create brick row and columns objects
     for (var i = 0; i < bricks.length; i++) {
 
-        this.newRow(i);
+        // Row objects, then filling the dom with rows
+        grid[i] = { y: i * this.brick.height };
+        $(this.nodes.row).addClass('row-' + i).appendTo(this.wrapper);
 
         for (var n = 0; n < bricks[i].length; n++) {
-            this.addBrick(bricks[i][n], i, n);
+
+            var thisX = n * (this.brick.width + this.brick.margin);
+
+            // Column objects, then filling the rows with columns
+            grid[i][n] = {
+                id: id++,
+                x: thisX,
+                y: 0,
+                color: bricks[i][n]
+            };
+
+            $(this.nodes.brick)
+                .attr('id', grid[i][n].id)
+                .css('left', grid[i][n].x)
+                .addClass('brick-type-' + grid[i][n].color)
+                .appendTo('.row-' + i);
+
         }
+
     }
 
-    // Fill the row with the absolute positioned bricks
-    // There's probably a better way to do this...
-    $('.row').each(function() {
-        $(this).find('.brick').each(function(i) {
-            $(this).css('left', i * ($(this).width() + 2)) ;
-        });
-    });
 };
 
 Bricks.prototype.level = function(level) {
@@ -313,9 +232,119 @@ Bricks.prototype.explode = function(brick) {
 
     thisBrick.addClass('explode');
 
-    score.add(scoreAmount);
+    score.add(score.amount);
 
 };
+
+
+
+//
+// Ball Object
+// ––––––––––––––––––––––––––––––––––––––––––––––
+function Ball() {
+
+    this.ball       = $('#ball');
+    this.width      = parseInt(this.ball.width(), 10);
+    this.velocity   = 1.11;
+    this.dir        = {x: 0,  y: 270};  // initial x, y direction
+    this.position   = {x: 300, y: 400}; // initial x, y position
+
+}
+
+Ball.prototype.bounce = function(dir, modifier) {
+
+    // Switch, just in case I want to add more directions in the future
+    switch(dir) {
+
+        case 'x':
+            this.dir.x *= -1;
+            break;
+
+        case 'y':
+            this.dir.y *= -1;
+
+            if (modifier) {
+                this.dir.x += modifier;
+            }
+
+            break;
+
+    }
+};
+
+Ball.prototype.move = function() {
+
+    this.position.x += this.dir.x * Math.PI / 180 * this.velocity;
+    this.position.y += this.dir.y * Math.PI / 180 * this.velocity;
+
+    // console.log(this.dir.x);
+
+    this.ball.css({
+        left : this.position.x,
+        top  : this.position.y
+    });
+
+};
+
+Ball.prototype.collisions = function() {
+
+    // Side wall collision
+    if (this.position.x <= stage.boundary.left + this.width || this.position.x >= stage.boundary.right - this.width) {
+        this.bounce('x');
+    }
+
+    // Top wall
+    else if (this.position.y <= stage.boundary.top + this.width / 2) {
+        this.bounce('y');
+    }
+
+    // Paddle
+    // Todo: Figure out why I need so many arbitrary values
+    else if (this.position.y >= paddle.position.y - this.width - 2 && this.position.x >= paddle.position.x && this.position.x < paddle.position.x + paddle.width) {
+        this.collide(paddle);
+    }
+
+    // Below paddle = game over!
+    else if (this.position.y >= paddle.position.y + this.width + 10) {
+        console.log('game over');
+        gamesOn = false;
+    }
+
+    // Check each brick
+    // for (var n = 1; n <= grid.length; n++) {
+    //     console.log(n);
+    // }
+
+
+};
+
+Ball.prototype.collide = function(elem) {
+
+    // console.log('collided with:');
+    // console.log(elem);
+
+    if (elem === paddle) {
+
+        var diff = ball.position.x - paddle.position.x;
+        var launchAngle = 0;
+
+        if ( diff < paddle.width / 2 - 10) {
+            launchAngle = Math.round(Math.toDegrees(diff / 100) * Math.PI) - 90;
+        } else if ( diff > paddle.width / 2 + 10) {
+            launchAngle = Math.round(Math.toDegrees(diff / 100) * Math.PI);
+        }
+
+        ball.bounce('y', launchAngle);
+
+    }
+
+    else if (elem === brick) {
+
+    }
+
+};
+
+
 
 
 
@@ -346,8 +375,9 @@ function Controls() {
 // Scoreboard
 // ––––––––––––––––––––––––––––––––––––––––––––––
 function Score() {
-    this.amount = 0;
+    this.amount = 1000;
     this.wrapper = $('#score');
+    this.wrapper.html('0');
 }
 
 Score.prototype.add = function(amount) {
@@ -363,12 +393,10 @@ Score.prototype.add = function(amount) {
 // ––––––––––––––––––––––––––––––––––––––––––––––
 var stage     = new Stage();
 var paddle    = new Paddle();
-var ball      = new Ball();
 var bricks    = new Bricks();
+var ball      = new Ball();
 var score     = new Score();
 var controls  = new Controls();
-
-
 
 
 //
@@ -402,7 +430,6 @@ function gameLoop() {
 // Game init
 // ––––––––––––––––––––––––––––––––––––––––––––––
 bricks.level(1);
-score.add(0);
 gameLoop();
 
 
@@ -414,3 +441,4 @@ gameLoop();
 $('.brick').on('click', function() {
     bricks.explode(this);
 });
+
