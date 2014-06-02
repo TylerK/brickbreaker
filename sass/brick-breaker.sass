@@ -98,12 +98,8 @@ html, body
 #bricks
     width: $stageWidth
     height: 300px
-    padding: 3px 0 0 3px
-
-    .row
-        height: $brickHeight + $brickBorderWidth
-        position: relative
-        margin-bottom: 2px
+    position: relative
+    margin: 3px 0 0 3px
 
 .brick
     width: $brickWidth
@@ -143,17 +139,17 @@ html, body
     pointer-events: none
     @include opacity(0)
 
-.confetti
+.explosion
     width: 100px
     height: 100px
     position: absolute
     z-index: 9999
     pointer-events: none
 
-    div
+    .bits
         width: 13px
         height: 13px
         position: absolute
         left: 50%
         top: 50%
-        margin: -1px 0 0 -1px
+        margin: -6px 0 0 -6px

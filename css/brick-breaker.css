@@ -79,16 +79,11 @@ html, body {
 #bricks {
   width: 602px;
   height: 300px;
-  padding: 3px 0 0 3px;
-}
-/* line 103, ../sass/brick-breaker.sass */
-#bricks .row {
-  height: 19px;
   position: relative;
-  margin-bottom: 2px;
+  margin: 3px 0 0 3px;
 }
 
-/* line 108, ../sass/brick-breaker.sass */
+/* line 104, ../sass/brick-breaker.sass */
 .brick {
   width: 44px;
   height: 15px;
@@ -99,55 +94,55 @@ html, body {
   transition: all, 0.173s;
 }
 
-/* line 114, ../sass/brick-breaker.sass */
+/* line 110, ../sass/brick-breaker.sass */
 .brick-type-1 {
   background: #1abc9c;
   border-bottom: 4px solid #148f77;
 }
 
-/* line 117, ../sass/brick-breaker.sass */
+/* line 113, ../sass/brick-breaker.sass */
 .brick-type-2 {
   background: #2ecc71;
   border-bottom: 4px solid #25a25a;
 }
 
-/* line 120, ../sass/brick-breaker.sass */
+/* line 116, ../sass/brick-breaker.sass */
 .brick-type-3 {
   background: #3498db;
   border-bottom: 4px solid #217dbb;
 }
 
-/* line 123, ../sass/brick-breaker.sass */
+/* line 119, ../sass/brick-breaker.sass */
 .brick-type-4 {
   background: #9b59b6;
   border-bottom: 4px solid #804399;
 }
 
-/* line 126, ../sass/brick-breaker.sass */
+/* line 122, ../sass/brick-breaker.sass */
 .brick-type-5 {
   background: #f1c40f;
   border-bottom: 4px solid #c29d0b;
 }
 
-/* line 129, ../sass/brick-breaker.sass */
+/* line 125, ../sass/brick-breaker.sass */
 .brick-type-6 {
   background: #e74c3c;
   border-bottom: 4px solid #d62c1a;
 }
 
-/* line 132, ../sass/brick-breaker.sass */
+/* line 128, ../sass/brick-breaker.sass */
 .brick-type-7 {
   background: #95a5a6;
   border-bottom: 4px solid #798d8f;
 }
 
-/* line 135, ../sass/brick-breaker.sass */
+/* line 131, ../sass/brick-breaker.sass */
 .brick-type-8 {
   background: #ecf0f1;
   border-bottom: 4px solid #cfd9db;
 }
 
-/* line 138, ../sass/brick-breaker.sass */
+/* line 134, ../sass/brick-breaker.sass */
 .explode {
   width: 11px;
   height: 3.75px;
@@ -158,20 +153,20 @@ html, body {
   opacity: 0;
 }
 
-/* line 146, ../sass/brick-breaker.sass */
-.confetti {
+/* line 142, ../sass/brick-breaker.sass */
+.explosion {
   width: 100px;
   height: 100px;
   position: absolute;
   z-index: 9999;
   pointer-events: none;
 }
-/* line 153, ../sass/brick-breaker.sass */
-.confetti div {
+/* line 149, ../sass/brick-breaker.sass */
+.explosion .bits {
   width: 13px;
   height: 13px;
   position: absolute;
   left: 50%;
   top: 50%;
-  margin: -1px 0 0 -1px;
+  margin: -6px 0 0 -6px;
 }
