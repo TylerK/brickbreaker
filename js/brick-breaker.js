@@ -10,14 +10,16 @@ var $ = $, console = console, _ = _;
 
 
 //
-// Global variables and settings
+// Globals
 // ––––––––––––––––––––––––––––––––––––––––––––––
 var leftKey         = 37, // Keycode
     rightKey        = 39, // Keycode
     gamesOn         = true, // Todo: Tie this to a start button
     keysDown        = {},
     grid            = {},
-    destroyed       = [];
+    destroyed       = [],
+    debug           = false
+    ;
 
 
 
@@ -92,6 +94,7 @@ Paddle.prototype.move = function(direction) {
 // Bricks Object
 // ––––––––––––––––––––––––––––––––––––––––––––––
 function Bricks() {
+
     this.wrapper    = $('#bricks');
     this.height     = 0;
     this.nodes      = {
@@ -99,7 +102,9 @@ function Bricks() {
                         explosion:  '<div class="explosion"></div>',
                         bits:       '<div class="bits"></div>'
                     };
+
     this.brick      = {height: 15, width: 44, margin: 2}; // Not an actual brick object, just the default width\height settings
+
 }
 
 Bricks.prototype.layoutLevel = function(bricks) {
@@ -134,8 +139,6 @@ Bricks.prototype.layoutLevel = function(bricks) {
         this.height = y * (this.brick.height + 6);
 
     }
-
-    console.log(grid);
 
 };
 
@@ -279,8 +282,6 @@ Ball.prototype.move = function() {
     this.position.x += this.dir.x * Math.PI / 180 * this.velocity;
     this.position.y += this.dir.y * Math.PI / 180 * this.velocity;
 
-    // console.log(this.dir.x);
-
     this.ball.css({
         left : this.position.x,
         top  : this.position.y
@@ -297,7 +298,7 @@ Ball.prototype.checkBrickCollisions = function(x, y) {
 
         if (destroyed.indexOf(grid[obj].id) < 0) {
 
-            if ( x >= grid[obj].x && x <= grid[obj].x + width && y >= grid[obj].y && y <= grid[obj].y + height) {
+            if ( x >= grid[obj].x && x <= grid[obj].x + width && y >= grid[obj].y && y <= grid[obj].y + 30) {
 
                 var brick = grid[obj];
                 delete grid[obj];
@@ -314,10 +315,10 @@ Ball.prototype.checkBrickCollisions = function(x, y) {
 
 };
 
-Ball.prototype.collisions = function(x, y) {
+Ball.prototype.collisions = function() {
 
-    var ballX = Math.round(x);
-    var ballY = Math.round(y);
+    var ballX = Math.round(this.position.x);
+    var ballY = Math.round(this.position.y);
 
 
     // Side wall collision
@@ -338,7 +339,6 @@ Ball.prototype.collisions = function(x, y) {
 
     // Below paddle = game over!
     else if (ballY >= paddle.position.y + this.width + 10) {
-        console.log('game over');
         gamesOn = false;
     }
 
@@ -349,20 +349,16 @@ Ball.prototype.collisions = function(x, y) {
         var brickHit = this.checkBrickCollisions(ballX, ballY);
 
         if(brickHit) {
-            console.log('hit brick: ' + brickHit);
+            this.bounce('y');
             bricks.explode(brickHit);
             ball.collide(brickHit);
-            score.add(score.amount);
-            this.bounce('y');
+            score.add();
         }
     }
 
 };
 
 Ball.prototype.collide = function(elem) {
-
-    // console.log('collided with:');
-    console.log(elem);
 
     if (elem === paddle) {
 
@@ -376,10 +372,6 @@ Ball.prototype.collide = function(elem) {
         }
 
         ball.bounce('y', launchAngle);
-
-    }
-
-    else if (elem.hasOwnProperty('id')) {
 
     }
 
@@ -416,14 +408,52 @@ function Controls() {
 // Scoreboard
 // ––––––––––––––––––––––––––––––––––––––––––––––
 function Score() {
-    this.amount = 1;
-    this.wrapper = $('#score');
+    this.amount     = 0;
+    this.modifier   = 0;
+    this.wrapper    = $('#score');
     this.wrapper.html('0');
 }
 
-Score.prototype.add = function(amount) {
-    this.amount += amount;
+Score.prototype.add = function() {
+    this.amount++;
     this.wrapper.html(this.amount);
+};
+
+
+
+
+//
+// Testing stuff
+// ––––––––––––––––––––––––––––––––––––––––––––––
+function DebugMode() {
+
+    this.nodes = {
+        body    : $('body'),
+        wrapper : '<div class="debug"></div>',
+        hline   : '<div class="hline"></div>',
+        vline   : '<div class="vline"></div>'
+    };
+    this.lines = {};
+
+}
+
+DebugMode.prototype.drawLines = function(elem) {
+
+    console.log(elem);
+
+};
+
+DebugMode.prototype.on = function() {
+
+    debug = true;
+    debug.drawLines(paddle.wrapper);
+    debug.drawLines(ball.wrapper);
+
+};
+
+
+DebugMode.prototype.draw = function() {
+
 };
 
 
@@ -438,6 +468,7 @@ var bricks    = new Bricks();
 var ball      = new Ball();
 var score     = new Score();
 var controls  = new Controls();
+var debug     = new DebugMode();
 
 
 
@@ -459,12 +490,21 @@ function gameLoop() {
         }
 
         ball.move();
-        ball.collisions(ball.position.x, ball.position.y);
+        ball.collisions();
+    }
+
+    if(debug) {
+        debug.draw();
     }
 
     setTimeout(gameLoop, 20);
 
 }
+
+
+
+
+
 
 
 
@@ -476,12 +516,4 @@ bricks.level(1);
 gameLoop();
 
 
-
-
-//
-// Testing stuff
-// ––––––––––––––––––––––––––––––––––––––––––––––
-$('.brick').on('click', function() {
-    bricks.explode(this, this.id);
-});
 
