@@ -7,7 +7,8 @@ define(function(require) {
   var paddle      = require('modules/paddle'),
       ball        = require('modules/ball'),
       bricks      = require('modules/bricks'),
-      controls    = require('modules/controls');
+      controls    = require('modules/controls'),
+      score       = require('modules/score');
 
   var GameLoop = function() {
 

@@ -10,6 +10,7 @@ define(function (require) {
       stage = require('modules/stage');
 
 
+
   // Ball object
   var Ball = function() {
 
@@ -98,6 +99,7 @@ define(function (require) {
       var ballX = Math.round(this.position.x),
           ballY = Math.round(this.position.y);
 
+
       // Side wall collision
       if (ballX <= app.stage.boundary.left + this.width || ballX >= app.stage.boundary.right - this.width) {
         this.bounce('x');
@@ -128,6 +130,7 @@ define(function (require) {
         if(brickHit) {
           this.bounce('y');
           app.bricks.explode(brickHit);
+          this.collisionHandler(brickHit);
           app.score.add();
         }
       }

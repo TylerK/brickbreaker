@@ -103,7 +103,7 @@ define(function (require) {
 
       var confetti          = app.config.confettiAmount,
           explosion         = $(this.nodes.explosion),
-          bits              = $(this.nodes.bits),
+          bits              = this.nodes.bits,
           explodedBrick     = $('#' + brick.id),
           explosionColor    = explodedBrick.css('background-color');
 
@@ -139,9 +139,9 @@ define(function (require) {
           height  : 1,
           opacity : 0
         }, {
-          duration: 850,
-          easing: 'easeOutQuint'
+          duration: 850
         });
+
       });
     };
   };

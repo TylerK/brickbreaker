@@ -24,17 +24,20 @@ app.config = {
 
 
 //
+// Utility function
+// ––––––––––––––––––––––––––––––––––––––––––––––
+Math.toDegrees = function(rad) {
+    return rad * 180 / Math.PI;
+};
+
+
+//
 // Paths config
 //---------------------------------------------------------
 require.config({
   'paths': {
     'jquery'      : 'libs/jquery',
     'underscore'  : 'libs/underscore',
-  },
-  'shim': {
-    'jquery-easing' : {
-      'deps': ['jquery']
-    }
   }
 });
 
