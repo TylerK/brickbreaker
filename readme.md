@@ -1,5 +1,11 @@
-### Brick Breaker!
-Play it [here!](http://tylerk.github.io/brickbreaker/)
+### Brickbreaker!
+**Todos:**
+* Fix collision detection
+* Fix the angles when the ball hits the paddle or a brick(s)
+* Lives counter
+* Game over screen
+* Weapons. Duh. 
+* More levels
 
 ### Run it locally
 * `git clone`
