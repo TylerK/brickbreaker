@@ -16,9 +16,11 @@ window.app = {
 // Game config
 //---------------------------------------------------------
 app.config = {
-  startLevel: 1,
-  gameSpeed: 20
-}
+  startLevel:     1,
+  gameSpeed:      20,
+  paddleSpeed:    9,
+  confettiAmount: 30
+};
 
 
 //

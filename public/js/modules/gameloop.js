@@ -4,32 +4,36 @@
 define(function(require) {
   'use strict';
 
-  var GameLoop = app.gameLoop = function() {
+  var paddle      = require('modules/paddle'),
+      ball        = require('modules/ball'),
+      bricks      = require('modules/bricks'),
+      controls    = require('modules/controls');
+
+  var GameLoop = function() {
 
     // Get the ball moving. Har har.
     if (app.gamesOn) {
 
       // Movement keys
-      if (app.keysDown['leftKey']) {
+      if (app.keysDown[app.leftKey]) {
         app.paddle.move('left');
       }
 
-      else if (app.keysDown['rightKey']) {
+      else if (app.keysDown[app.rightKey]) {
         app.paddle.move('right');
       }
 
       app.ball.move();
-      app.ball.collisions();
+      app.ball.collisionChecker();
 
     }
 
-    //
-    // This is our main "game loop"
-    //
-    setTimeout(app.gameLoop, app.config.gameSpeed);
+    window.requestAnimationFrame(app.gameLoop);
 
   };
 
-  return new GameLoop();
+  // Start the game on level 1
+  app.bricks.level(app.config.startLevel);
+  app.gameLoop = GameLoop;
 
 });

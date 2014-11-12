@@ -4,31 +4,27 @@
 define(function(require) {
   'use strict';
 
-  var Score = app.score = function() {
+  var $ = require('jquery');
 
-    //
-    // Libs
-    //
-    var $ = require('jquery'),
-        _ = require('underscore');
+  var Score = function() {
 
     //
     // Initial values
     //
     this.amount     = 0;
     this.modifier   = 0;
-    this.wrapper    = $('#score');
-    this.wrapper.html('0');
+    this.$el        = $('#score');
+    this.$el.html('0');
 
     //
-    // Incement the score
+    // Increment the score
     //
     this.add = function() {
       this.amount++;
-      this.wrapper.html(this.amount);
+      this.$el.html(this.amount);
     };
   };
 
-  return new Score();
+  app.score = new Score();
 
 });

@@ -4,27 +4,27 @@
 define(function (require) {
   "use strict";
 
-  var Ball = app.ball = function() {
 
-    //
-    // Libs
-    //
-    var $ = require('jquery'),
-        _ = require('underscore');
+  // Libs and othe required modules
+  var $     = require('jquery'),
+      stage = require('modules/stage');
 
+
+  // Ball object
+  var Ball = function() {
 
     //
     // Initial setup
     //
-    this.ball       = $('#ball');
-    this.width      = parseInt(this.ball.width(), 10);
+    this.$el        = $('#ball');
+    this.width      = parseInt(this.$el.width(), 10);
     this.velocity   = 1.11;                // initial velocity
     this.dir        = { x: 0,   y: 270 };  // initial x, y direction
     this.position   = { x: 300, y: 400 };  // initial x, y position
 
 
     //
-    // Adjust the x and y dir object values
+    // Adjust the x and y dir object values when the ball is bounced
     //
     this.bounce = function(dir, modifier) {
 
@@ -39,7 +39,6 @@ define(function (require) {
           this.dir.x += modifier;
         }
       }
-
     };
 
 
@@ -51,7 +50,7 @@ define(function (require) {
       this.position.x += this.dir.x * Math.PI / 180 * this.velocity;
       this.position.y += this.dir.y * Math.PI / 180 * this.velocity;
 
-      this.ball.css({
+      this.$el.css({
         left : this.position.x,
         top  : this.position.y
       });
@@ -59,26 +58,31 @@ define(function (require) {
 
 
     //
-    // Check for collisions as the ball is moving about
+    // Check for a collision, returns true\false
+    // This function is part of the gameLoop
     //
-    this.checkBrickCollisions = function(x, y) {
+    this.collidedWithBrick = function(x, y) {
 
       var width  = app.bricks.brick.width,
           height = app.bricks.brick.height;
 
-      for (var obj in grid) {
+      for (var obj in app.grid) {
 
-        if (destroyed.indexOf(grid[obj].id) < 0) {
+        // Making sure the collision is not with an already destroyed brick
+        // Avoids race conditions and other uglyness.
+        if (app.destroyed.indexOf(app.grid[obj].id) < 0) {
 
-          if ( x >= grid[obj].x && x <= grid[obj].x + width && y >= grid[obj].y && y <= grid[obj].y + 30) {
+          if (x >= app.grid[obj].x &&
+              x <= app.grid[obj].x + width &&
+              y >= app.grid[obj].y && y <=
+              app.grid[obj].y + 30) {
 
-            var brick = grid[obj];
-            delete grid[obj];
-            destroyed.push(brick);
+            var brick = app.grid[obj];
+            app.destroyed.push(brick);
+            delete app.grid[obj];
             return brick;
 
           }
-
         } else {
           return false;
         }
@@ -87,9 +91,9 @@ define(function (require) {
 
 
     //
-    // Setup checks for collision as the ball is moving
+    // Main collisions and boundry checking functionality as the ball is moving
     //
-    this.collisions = function() {
+    this.collisionChecker = function() {
 
       var ballX = Math.round(this.position.x),
           ballY = Math.round(this.position.y);
@@ -105,10 +109,10 @@ define(function (require) {
       }
 
       // Paddle
-      // Todo: I suspect some css is getting in the way of
-      //
+      // TODO: Since I have to set a bunch of arbitrary pixel amounts
+      // here, I suspect there is a CSS fix for this. Need to investigate.
       else if (ballY >= app.paddle.position.y - this.width - 2 && ballX >= app.paddle.position.x && ballX < app.paddle.position.x + app.paddle.width) {
-        this.collide(paddle);
+        this.collisionHandler('paddle');
       }
 
       // Below paddle = game over!
@@ -117,42 +121,41 @@ define(function (require) {
       }
 
       // bricks.height = total height of the bricks container
-      else if(ballY <= bricks.height) {
+      else if(ballY <= app.bricks.height) {
 
-        var brickHit = this.checkBrickCollisions(ballX, ballY);
+        var brickHit = this.collidedWithBrick(ballX, ballY);
 
         if(brickHit) {
           this.bounce('y');
-          bricks.explode(brickHit);
-          ball.collide(brickHit);
-          score.add();
+          app.bricks.explode(brickHit);
+          app.score.add();
         }
       }
     };
 
 
     //
-    // What to do when a collision is detected
+    // What to do when a collision is detected with the paddle
     //
-    this.collide = function(elem) {
+    this.collisionHandler = function(elem) {
 
-      if (elem === paddle) {
+      if (elem === 'paddle') {
 
-        var diff = this.ball.position.x - app.paddle.position.x;
+        var diff = this.position.x - app.paddle.position.x;
         var launchAngle = 0;
 
-        if ( diff < app.paddle.width / 2 - 10) {
+        if (diff < app.paddle.width / 2 - 10) {
           launchAngle = Math.round(Math.toDegrees(diff / 100) * Math.PI) - 90;
-        } else if ( diff > paddle.width / 2 + 10) {
+        } else if (diff > paddle.width / 2 + 10) {
           launchAngle = Math.round(Math.toDegrees(diff / 100) * Math.PI);
         }
 
-        this.ball.bounce('y', launchAngle);
+        this.bounce('y', launchAngle);
 
       }
     };
   };
 
-  return new Ball();
+  app.ball = new Ball();
 
 });

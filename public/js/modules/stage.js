@@ -4,15 +4,17 @@
 define(function(require) {
   'use strict';
 
+  var $ = require('jquery');
+
   var Stage = app.stage = function() {
 
-    this.wrapper    = $('#stage');
-    this.width      = parseInt(this.wrapper.width(), 10);
-    this.height     = parseInt(this.wrapper.height(), 10);
-    this.boundary   = { top: 0, right: this.width, bottom: this.height, left: 0 };
+    this.$el      = $('#stage');
+    this.width    = parseInt(this.$el.width(), 10);
+    this.height   = parseInt(this.$el.height(), 10);
+    this.boundary = { top: 0, right: this.width, bottom: this.height, left: 0 };
 
-  }
+  };
 
-  return new Stage();
+  app.stage = new Stage();
 
 });
