@@ -1,51 +1,36 @@
-'use strict';
+// 'use strict';
 
 
 
 
-// Getting jshint to be quiet about libs.
-var $ = $, console = console;
+// // Getting jshint to be quiet about libs.
+// var $ = $, console = console;
 
 
 
 
-//
-// Globals
-// ––––––––––––––––––––––––––––––––––––––––––––––
-var
-  leftKey         = 37, // Keycode
-  rightKey        = 39, // Keycode
-  gamesOn         = true, // Todo: Tie this to a start button
-  keysDown        = {},
-  grid            = {},
-  destroyed       = [],
-  debug           = false
-  ;
+// //
+// // Globals
+// // ––––––––––––––––––––––––––––––––––––––––––––––
+// var
+//   leftKey         = 37, // Keycode
+//   rightKey        = 39, // Keycode
+//   gamesOn         = true, // Todo: Tie this to a start button
+//   keysDown        = {},
+//   grid            = {},
+//   destroyed       = [],
+//   debug           = false
+//   ;
 
 
 
 
-//
-// Utility functions
-// ––––––––––––––––––––––––––––––––––––––––––––––
-Math.toDegrees = function(rad) {
-  return rad * 180 / Math.PI;
-};
-
-
-
-
-//
-// Stage Object
-// ––––––––––––––––––––––––––––––––––––––––––––––
-function Stage() {
-
-  this.wrapper    = $('#stage');
-  this.width      = parseInt(this.wrapper.width(), 10);
-  this.height     = parseInt(this.wrapper.height(), 10);
-  this.boundary   = { top: 0, right: this.width, bottom: this.height, left: 0 };
-
-}
+// //
+// // Utility functions
+// // ––––––––––––––––––––––––––––––––––––––––––––––
+// Math.toDegrees = function(rad) {
+//   return rad * 180 / Math.PI;
+// };
 
 
 
@@ -248,19 +233,16 @@ function Controls() {
 
     // Any pressed key gets dumped in to the keysDown
     // object for use in the game loop.
-    //
-    // This kills that shitty lag for the first
-    // half a second when holding a key down.
-
     $(document).on('keydown', function(e) {
         keysDown[e.which] = true;
     });
-
     $(document).on('keyup', function(e) {
         delete keysDown[e.which];
     });
 
 }
+
+
 
 
 
@@ -282,39 +264,6 @@ Score.prototype.add = function() {
 
 
 
-//
-// Testing stuff
-// ––––––––––––––––––––––––––––––––––––––––––––––
-function DebugMode() {
-
-    this.nodes = {
-        body    : $('body'),
-        wrapper : '<div class="debug"></div>',
-        hline   : '<div class="hline"></div>',
-        vline   : '<div class="vline"></div>'
-    };
-    this.lines = {};
-
-}
-
-DebugMode.prototype.drawLines = function(elem) {
-
-    console.log(elem);
-
-};
-
-DebugMode.prototype.on = function() {
-
-    debug = true;
-    debug.drawLines(paddle.wrapper);
-    debug.drawLines(ball.wrapper);
-
-};
-
-
-DebugMode.prototype.draw = function() {
-
-};
 
 
 

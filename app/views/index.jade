@@ -1,0 +1,21 @@
+doctype
+html(lang='en')
+
+head
+  meta(charset='UTF-8')
+  title Brick Breaker
+  link(rel='stylesheet', href='/css/normalize.css')
+  link(rel='stylesheet', href='/css/brick-breaker.css')
+
+body
+
+  //- Game Structure
+  div#stage
+    div#score
+    div#lives
+    div#bricks
+    div#ball
+    div#paddle
+
+  //- Brick Breaker Bootstrap
+  script(data-main='/js/init.js', src='/js/libs/require.js')
